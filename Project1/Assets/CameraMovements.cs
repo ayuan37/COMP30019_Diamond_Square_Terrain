@@ -4,49 +4,39 @@ using UnityEngine;
 
 public class CameraMovements : MonoBehaviour
 {
-    public float cameraSpeed;
+    // add RigidBody to angle the direction of the forwards and backwards movement
+    // of the camera
+    public Rigidbody myRigidBody;
+
+    public float cameraSpeed = 0.1f;
     public float rotationSpeed = 2.0f;
 
     public float pitchRotation = 0.0f;
     public float yawRotation = 0.0f;
 
 
-    public float lastMouse;
+    private void Start(){
 
-
-
-    // move camera wasd
-    // pitch and yaw
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        // Initialize RigidBody
+        myRigidBody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        Vector3 direction = new Vector3(); // create (0,0,0)
-        // move camera
-        float dx = 0.0f, dz = 0.0f;
-
+    void Update(){
         // Forward and Backward relative to where you are looking
         if (Input.GetKey(KeyCode.W))
-            dz += 1.0f;
-        if (Input.GetKey(KeyCode.S))
-            dz -= 1.0f;
+            myRigidBody.AddForce(transform.forward * cameraSpeed);
 
+        if (Input.GetKey(KeyCode.S))
+            myRigidBody.AddForce((transform.forward*-1) * cameraSpeed);
+            
         //Left and right
         if (Input.GetKey(KeyCode.D))
-            dx += 1.0f;
+            myRigidBody.AddForce(transform.right * cameraSpeed);
         if (Input.GetKey(KeyCode.A))
-            dx -= 1.0f;
-
-        this.transform.localPosition += new Vector3(dx, 0.0f, dz) * cameraSpeed * Time.deltaTime;
+            myRigidBody.AddForce(transform.right*-1 * cameraSpeed);
 
         // Control relative pitch and yaw
-
         // pitch = rotate in x-axis -> look up and down
         pitchRotation -= rotationSpeed * Input.GetAxis("Mouse Y");
 
