@@ -4,6 +4,8 @@
 Shader "Unlit/WaterShader" {
     
     Properties {
+
+        // Water properties
         _Color("Color", Color) = (0,0,0,1)
         _MainTex ("Texture", 2D) = "white" {}
 
@@ -66,7 +68,7 @@ Shader "Unlit/WaterShader" {
             
             // Implementation of the fragment shader
             fixed4 frag(vertOut v) : SV_Target {
-                fixed4 col = tex2D(_MainTex, v.uv);
+                fixed4 col = tex2D(_MainTex, v.uv) * _Color;
                 return col;
             }
             ENDCG
