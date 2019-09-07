@@ -70,6 +70,7 @@
     <None Include="Assets\WaterShader.shader" />
     <None Include="Assets\WaterPhong.shader" />
     <None Include="Assets\PhongShader.shader" />
+    <None Include="Assets\VertexColorShader.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>/Users/angelyuan/Desktop/Graphics and Interaction/COMP30019_Assignment1/Project1/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

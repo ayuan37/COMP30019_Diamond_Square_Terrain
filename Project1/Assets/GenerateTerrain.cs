@@ -5,27 +5,38 @@ using UnityEngine;
 // Guided by Ather Omar: https:// https://www.youtube.com/watch?v=1HV8GbFnCik
 public class GenerateTerrain : MonoBehaviour
 {
-    public float size = 30f;
-    public int nDivisions = 64;
-    public float maxHeight = 5f;
+    private float size = 30f;
+    private int nDivisions = 128;
+    private float maxHeight = 5f;
 
     Vector3[] vertices;
+    Color[] colours;
+    private float minTerrainHeight;
+    private float maxTerrainHeight;
     int[] triangles;
     Mesh mesh;
+
+    public Gradient heightGradient;
 
     // Start is called before the first frame update
     void Start()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+        
+        minTerrainHeight = maxHeight;
+        maxTerrainHeight = -maxHeight;
 
         GenerateVertices();
         DrawMesh();
+        
+        MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
+        renderer.material.shader = Shader.Find("Unlit/VertexColorShader");
     }
 
     void GenerateVertices()
     {
-        vertices = new Vector3[(nDivisions + 1) * (nDivisions + 1)];
+        this.vertices = new Vector3[(nDivisions + 1) * (nDivisions + 1)];
 
         // use this to make sure to centre the square
         float halfSize = size * 0.5f;
@@ -36,7 +47,7 @@ public class GenerateTerrain : MonoBehaviour
             for (int x = 0; x < nDivisions + 1; x++)
             {
                 // zth row, xth column
-                vertices[x*(nDivisions + 1) + z] = 
+                this.vertices[x*(nDivisions + 1) + z] = 
                     new Vector3(-halfSize + x*divisionSize, 0, halfSize - z*divisionSize);
             }
         }
@@ -50,6 +61,7 @@ public class GenerateTerrain : MonoBehaviour
         vertices[vertices.Length - 1].y = Random.Range(-maxHeight, maxHeight);
 
 
+        // go over each vertices and set its height according to diamond square
         int niters = (int)Mathf.Log(nDivisions, 2);
         int nSquares = 1;
         int squareSize = nDivisions;
@@ -69,6 +81,37 @@ public class GenerateTerrain : MonoBehaviour
             squareSize /= 2;
             maxHeight *= 0.5f;
         }
+
+        SetColoursForHeight();
+    }
+
+    void SetColoursForHeight()
+    {
+        // find the max and min height of terrain to get the correct proportion
+        // for its height on the gradient
+        for (int v = 0; v < vertices.Length; v++)
+        {
+            if (vertices[v].y > maxTerrainHeight) {
+                maxTerrainHeight = vertices[v].y;
+            }
+            if (vertices[v].y < minTerrainHeight) {
+                minTerrainHeight = vertices[v].y;
+            }
+        }
+
+        int i = 0;
+        this.colours = new Color[(nDivisions + 1) * (nDivisions + 1)];
+        for (int z = 0; z < nDivisions + 1; z++) 
+        {
+            for (int x = 0; x< nDivisions + 1; x++) 
+            {
+                // scale height to be a number between 0 and 1
+                float scaledHeight = (vertices[i].y - minTerrainHeight)/(maxTerrainHeight - minTerrainHeight);
+                // colours[i] = heightGradient.Evaluate(scaledHeight);
+                this.colours[i] = Color.red;
+            }
+        }
+
     }
 
     // TODO: optimise this to build triangles in the nested forloop above
@@ -76,7 +119,7 @@ public class GenerateTerrain : MonoBehaviour
     {
         int vert = 0;
         int tris = 0;
-        triangles = new int[nDivisions * nDivisions * 6];
+        this.triangles = new int[nDivisions * nDivisions * 6];
 
         for (int z = 0; z < nDivisions; z++) 
         {
@@ -118,13 +161,14 @@ public class GenerateTerrain : MonoBehaviour
     // taken from Brackeys :https://www.youtube.com/watch?v=64NblGkAabk
     void DrawMesh()
     {
-        mesh.Clear();
+        // mesh.Clear();
 
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
+        mesh.vertices = this.vertices;
+        mesh.triangles = this.triangles;
+        mesh.colors = this.colours;
 
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
+        // mesh.RecalculateBounds();
+        // mesh.RecalculateNormals();
     }
 
     // Update is called once per frame
