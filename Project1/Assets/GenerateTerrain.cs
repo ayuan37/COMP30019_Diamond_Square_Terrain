@@ -10,7 +10,7 @@ public class GenerateTerrain : MonoBehaviour
     private float maxHeight = 5f;
 
     Vector3[] vertices;
-    Color[] colours;
+    Color[] colors;
     private float minTerrainHeight;
     private float maxTerrainHeight;
     int[] triangles;
@@ -36,7 +36,7 @@ public class GenerateTerrain : MonoBehaviour
 
     void GenerateVertices()
     {
-        this.vertices = new Vector3[(nDivisions + 1) * (nDivisions + 1)];
+        vertices = new Vector3[(nDivisions + 1) * (nDivisions + 1)];
 
         // use this to make sure to centre the square
         float halfSize = size * 0.5f;
@@ -47,7 +47,7 @@ public class GenerateTerrain : MonoBehaviour
             for (int x = 0; x < nDivisions + 1; x++)
             {
                 // zth row, xth column
-                this.vertices[x*(nDivisions + 1) + z] = 
+                vertices[x*(nDivisions + 1) + z] = 
                     new Vector3(-halfSize + x*divisionSize, 0, halfSize - z*divisionSize);
             }
         }
@@ -82,10 +82,11 @@ public class GenerateTerrain : MonoBehaviour
             maxHeight *= 0.5f;
         }
 
+        FindMinMaxHeight();
         SetColoursForHeight();
     }
 
-    void SetColoursForHeight()
+    void FindMinMaxHeight() 
     {
         // find the max and min height of terrain to get the correct proportion
         // for its height on the gradient
@@ -99,17 +100,16 @@ public class GenerateTerrain : MonoBehaviour
             }
         }
 
-        int i = 0;
-        this.colours = new Color[(nDivisions + 1) * (nDivisions + 1)];
-        for (int z = 0; z < nDivisions + 1; z++) 
+    }
+    void SetColoursForHeight()
+    {
+        colors = new Color[vertices.Length];
+        for (int v = 0; v < vertices.Length; v++) 
         {
-            for (int x = 0; x< nDivisions + 1; x++) 
-            {
-                // scale height to be a number between 0 and 1
-                float scaledHeight = (vertices[i].y - minTerrainHeight)/(maxTerrainHeight - minTerrainHeight);
-                // colours[i] = heightGradient.Evaluate(scaledHeight);
-                this.colours[i] = Color.red;
-            }
+            // scale height to be a number between 0 and 1
+            float scaledHeight = (vertices[v].y - minTerrainHeight)/(maxTerrainHeight - minTerrainHeight);
+            colors[v] = heightGradient.Evaluate(scaledHeight);
+            // colors[v] = Color.red;
         }
 
     }
@@ -119,7 +119,7 @@ public class GenerateTerrain : MonoBehaviour
     {
         int vert = 0;
         int tris = 0;
-        this.triangles = new int[nDivisions * nDivisions * 6];
+        triangles = new int[nDivisions * nDivisions * 6];
 
         for (int z = 0; z < nDivisions; z++) 
         {
@@ -161,19 +161,19 @@ public class GenerateTerrain : MonoBehaviour
     // taken from Brackeys :https://www.youtube.com/watch?v=64NblGkAabk
     void DrawMesh()
     {
-        // mesh.Clear();
+        mesh.Clear();
 
-        mesh.vertices = this.vertices;
-        mesh.triangles = this.triangles;
-        mesh.colors = this.colours;
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.colors = colors;
 
-        // mesh.RecalculateBounds();
-        // mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        SetColoursForHeight();
     }
 }
