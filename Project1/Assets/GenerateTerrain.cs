@@ -55,8 +55,8 @@ public class GenerateTerrain : MonoBehaviour
         BuildTriangles();
 
         // init corners' heights
-        vertices[0].y = Random.Range(0, maxHeight);
-        vertices[nDivisions].y = Random.Range(0, maxHeight);
+        vertices[0].y = Random.Range(-maxHeight, maxHeight);
+        vertices[nDivisions].y = Random.Range(-maxHeight, maxHeight);
         vertices[vertices.Length - 1 - nDivisions].y = Random.Range(-maxHeight, maxHeight);
         vertices[vertices.Length - 1].y = Random.Range(-maxHeight, maxHeight);
 
@@ -174,6 +174,5 @@ public class GenerateTerrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetColoursForHeight();
     }
 }

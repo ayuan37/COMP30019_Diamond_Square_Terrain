@@ -4,23 +4,39 @@ using UnityEngine;
 
 public class WaterVertices : MonoBehaviour
 {
+    private float size = 60f;
+    private int nDivisions = 128;
+    
+    Vector3[] vertices;
+    int[] triangles;
+    Mesh mesh;
+
     // public Shader waterShader;
     public SunScript pointLight;
 
     // Use this for initialization
     void Start()
     {
-        // Add a MeshFilter component to this entity. This essentially comprises of a
-        // mesh definition, which in this example is a collection of vertices, colours 
-        // and triangles (groups of three vertices). 
+        mesh = new Mesh();
+        GetComponent<MeshFilter>().mesh = mesh;
+        vertices = new Vector3[(nDivisions + 1) * (nDivisions + 1)];
 
-        // MeshFilter waterMesh = this.gameObject.AddComponent<MeshFilter>();
-        // waterMesh.mesh = CreateWaterMesh();
+        // use this to make sure to centre the square
+        float halfSize = size * 0.5f;
+        float divisionSize = size / nDivisions;
 
-        // Add a MeshRenderer component. This component actually renders the mesh that
-        // is defined by the MeshFilter component.
-        // MeshRenderer renderer = this.gameObject.AddComponent<MeshRenderer>();
-        // renderer.material.shader = waterShader;
+        for (int z = 0; z < nDivisions + 1; z++) 
+        {
+            for (int x = 0; x < nDivisions + 1; x++)
+            {
+                // zth row, xth column
+                vertices[x*(nDivisions + 1) + z] = 
+                    new Vector3(-halfSize + x*divisionSize, 0, halfSize - z*divisionSize);
+            }
+        }
+
+        BuildTriangles();
+        DrawMesh();
     }
 
     // Called each frame
@@ -34,42 +50,40 @@ public class WaterVertices : MonoBehaviour
         renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
     }
 
-    // Mesh CreateWaterMesh(){
+    void BuildTriangles ()
+    {
+        int vert = 0;
+        int tris = 0;
+        triangles = new int[nDivisions * nDivisions * 6];
 
-    //     Mesh m = new Mesh();
-    //     m.name = "Water";
-    //     float size = 5;
+        for (int z = 0; z < nDivisions; z++) 
+        {
+            for (int x = 0; x < nDivisions; x++)
+            {
+                triangles[tris + 0] = vert + 0;
+                triangles[tris + 1] = vert + nDivisions + 1;
+                triangles[tris + 2] = vert + 1;
 
-    //     // add vertices
-    //     m.vertices = new[] {
+                triangles[tris + 3] = vert + 1;
+                triangles[tris + 4] = vert + nDivisions + 1;
+                triangles[tris + 5] = vert + nDivisions + 2;
 
-    //         new Vector3(1.0f, 0.0f, -1.0f) * size, // Top
-    //         new Vector3(-1.0f, 0.0f, -1.0f) * size,
-    //         new Vector3(-1.0f, 0.0f, 1.0f) * size,
-    //         new Vector3(1.0f, 0.0f, -1.0f) * size,
-    //         new Vector3(-1.0f, 0.0f, 1.0f)* size,
-    //         new Vector3(1.0f, 0.0f, 1.0f)* size,
+                vert++;
+                tris += 6;
+            }
+            vert++;
+        }
+    }
 
-    //     };
+    void DrawMesh()
+    {
+        mesh.Clear();
 
-    //     Vector3 topNormal = new Vector3(0.0f, 1.0f, 0.0f);
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
 
-    //     m.normals = new[] {
-    //         topNormal,
-    //     };
-
-    //     // triangle thing modified from workshop
-    //     int[] triangles = new int[m.vertices.Length];
-    //     for (int i = 0; i < m.vertices.Length; i++){
-
-
-    //         // triangles[i] = m.vertices.Length - 1 - i; //inside cube
-    //         triangles[i] = i; //outside cub
-    //     }
-    //     m.triangles = triangles;
-
-    //     return m;
-
-    // }
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+    }
 
 }
