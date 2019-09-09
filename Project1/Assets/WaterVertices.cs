@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WaterVertices : MonoBehaviour
 {
-    private float size = 60f;
+    private float size = 30f;
     private int nDivisions = 128;
     
     Vector3[] vertices;
