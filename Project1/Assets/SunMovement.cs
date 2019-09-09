@@ -14,7 +14,7 @@ public class SunMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float x,y,z;
+        float x,y;
 
         // The sun rises and falls continously
         timeCount += Time.deltaTime * sunSpeed;
