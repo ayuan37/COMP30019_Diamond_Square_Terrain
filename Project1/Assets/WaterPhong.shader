@@ -134,11 +134,11 @@ Shader "Unlit/WaterPhong" {
 
                 float4 returnColor = float4(0.0f,0.0f,0.0f,0.0f);
 
-                // Bling-Phong Light Formula
+                // Blinn-Phong Light Formula
                 returnColor.rgb = amb.rgb + dif.rgb + spe.rgb;
                 returnColor.a = v.color.a;
 
-				// return the shader texture with the Bling-Phong Lighting
+				// return the shader texture with the Blinn-Phong Lighting
                 fixed4 col = tex2D(_MainTex, v.uv) * returnColor;
                 return col;
             }

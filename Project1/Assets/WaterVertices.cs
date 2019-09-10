@@ -6,6 +6,8 @@ public class WaterVertices : MonoBehaviour
 {
     private float size = 30f;
     private int nDivisions = 128;
+
+
     
     Vector3[] vertices;
     int[] triangles;
@@ -31,7 +33,7 @@ public class WaterVertices : MonoBehaviour
             {
                 // zth row, xth column
                 vertices[x*(nDivisions + 1) + z] = 
-                    new Vector3(-halfSize + x*divisionSize, 0, halfSize - z*divisionSize);
+                    new Vector3(-halfSize + x*divisionSize, Random.Range(-0.001f,0.001f), halfSize - z*divisionSize);
             }
         }
 
