@@ -10,6 +10,7 @@ Shader "Unlit/WaterPhong" {
         // Water properties
         _Color("Color", Color) = (0,0,0,1)
         _MainTex ("Texture", 2D) = "white" {}
+        _Transparency("Transparency", Range(0.0,0.5)) = 0.25
 
         // Configure the physics of the wave
         _Amplitude("Amplitude", Range(-10,10)) = 3
@@ -19,7 +20,9 @@ Shader "Unlit/WaterPhong" {
     }
     SubShader { 
 
-        Tags {"RenderType" = "Opaque"}
+        Tags {"RenderType" = "Transparent"}
+
+        Blend SrcAlpha OneMinusSrcAlpha
         
         Pass {
             Cull Off
@@ -28,13 +31,17 @@ Shader "Unlit/WaterPhong" {
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
+            #define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw)
+
 
             // The lighting for the water
             uniform float3 _PointLightColor = (0, 0, 0);
 			uniform float3 _PointLightPosition = (100.0, 100.0, 100.0);
             
-            uniform sampler2D _MainTex;
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
             fixed4 _Color;
+            float _Transparency;
             float _Amplitude, _Wavelength, _Speed;
 
             struct Input {
@@ -94,7 +101,7 @@ Shader "Unlit/WaterPhong" {
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 
-                o.uv = v.uv;
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                   
                 return o;
             }
@@ -124,14 +131,14 @@ Shader "Unlit/WaterPhong" {
                 /** Specular Light Calculation **/
 				// Calculate specular reflections
 				float Ks = 1;
-				float specN = 5; // Values>>1 give tighter highlights
+				float specN = 10; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				float3 R = float3(0.0, 0.0, 0.0);
 
                 // Using the Bling-Phong Formula to replace the R.L with N.H
-                float3 H = (L+V) / length(L+V);
+                float3 H = normalize(V + L);
 				float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(interpNormal, H)), specN);
-
+            
                 float4 returnColor = float4(0.0f,0.0f,0.0f,0.0f);
 
                 // Blinn-Phong Light Formula
@@ -140,6 +147,7 @@ Shader "Unlit/WaterPhong" {
 
 				// return the shader texture with the Blinn-Phong Lighting
                 fixed4 col = tex2D(_MainTex, v.uv) * returnColor;
+                col.a = _Transparency;
                 return col;
             }
             ENDCG

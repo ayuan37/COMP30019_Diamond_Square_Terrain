@@ -21,7 +21,7 @@ Material:
     m_TexEnvs:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: f20d74ca1026049de8310637483509ac, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 30, y: 30}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Amplitude: 0.3
@@ -38,7 +38,7 @@ Material:
     - _UseUIAlphaClip: 0
     - _Wavelength: 4.5
     m_Colors:
-    - _Color: {r: 0.27450988, g: 0.8831029, b: 0.9254902, a: 0}
+    - _Color: {r: 0.15566039, g: 0.71879125, b: 1, a: 0}
     - _PointLightColor: {r: 0.2924528, g: 0.11725702, b: 0.11725702, a: 0}
     - _PointLightPosition: {r: 0, g: 0, b: 0, a: 1}
     - _Specular: {r: 0, g: 0, b: 0, a: 0}

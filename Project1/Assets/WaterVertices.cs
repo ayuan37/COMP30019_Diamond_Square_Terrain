@@ -5,12 +5,11 @@ using UnityEngine;
 public class WaterVertices : MonoBehaviour
 {
     private float size = 30f;
-    private int nDivisions = 128;
-
-
-    
+    private int nDivisions = 128;    
     Vector3[] vertices;
+    Vector2[] uvs;
     int[] triangles;
+
     Mesh mesh;
 
     // public Shader waterShader;
@@ -20,12 +19,13 @@ public class WaterVertices : MonoBehaviour
     void Start()
     {
         mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshFilter>().sharedMesh = mesh;
         vertices = new Vector3[(nDivisions + 1) * (nDivisions + 1)];
 
         // use this to make sure to centre the square
         float halfSize = size * 0.5f;
         float divisionSize = size / nDivisions;
+        float y = Random.Range(-0.005f,0.005f);
 
         for (int z = 0; z < nDivisions + 1; z++) 
         {
@@ -33,12 +33,19 @@ public class WaterVertices : MonoBehaviour
             {
                 // zth row, xth column
                 vertices[x*(nDivisions + 1) + z] = 
-                    new Vector3(-halfSize + x*divisionSize, Random.Range(-0.001f,0.001f), halfSize - z*divisionSize);
-            }
+                    new Vector3(-halfSize + x*divisionSize, y, halfSize - z*divisionSize);
+            }    
         }
-
+        
+        MapUvs();
         BuildTriangles();
         DrawMesh();
+
+        MeshCollider collider = this.gameObject.GetComponent<MeshCollider>();
+        collider.sharedMesh = mesh;
+
+        
+
     }
 
     // Called each frame
@@ -50,6 +57,7 @@ public class WaterVertices : MonoBehaviour
         // Pass updated light positions to shader
         renderer.material.SetColor("_PointLightColor", this.pointLight.color);
         renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
+
     }
 
     void BuildTriangles ()
@@ -77,12 +85,21 @@ public class WaterVertices : MonoBehaviour
         }
     }
 
+    void MapUvs(){
+        uvs = new Vector2[vertices.Length];
+        for (int i = 0; i < uvs.Length; i++)
+        {
+            uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
+        }
+    }
+
     void DrawMesh()
     {
         mesh.Clear();
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.uv = uvs;
 
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();

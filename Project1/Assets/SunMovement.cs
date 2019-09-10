@@ -8,8 +8,8 @@ public class SunMovement : MonoBehaviour
     public float sunSpeed = 1.0f;
     public float timeCount = 5.0f;
 
-    public float xSunDistance = 20.0f;
-    public float ySunDistance = 20.0f;
+    public float xSunDistance = 50.0f;
+    public float ySunDistance = 50.0f;
 
     // Update is called once per frame
     void Update()

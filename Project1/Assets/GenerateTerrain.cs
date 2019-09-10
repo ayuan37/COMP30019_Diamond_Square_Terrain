@@ -35,6 +35,9 @@ public class GenerateTerrain : MonoBehaviour
         
         renderer = this.gameObject.GetComponent<MeshRenderer>();
         renderer.material.shader = Shader.Find("Unlit/TerrainShader");
+
+        MeshCollider collider = this.gameObject.GetComponent<MeshCollider>();
+        collider.sharedMesh = mesh;
     }
 
     void GenerateVertices()

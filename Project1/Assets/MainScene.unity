@@ -153,7 +153,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 14
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!23 &182533419
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -198,7 +198,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 182533417}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!4 &182533421
 Transform:
   m_ObjectHideFlags: 0
@@ -345,10 +345,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localPos: {x: 0, y: 20, z: 0}
-  sunSpeed: 1
+  sunSpeed: 0.5
   timeCount: 0
   xSunDistance: 20
-  ySunDistance: 5
+  ySunDistance: 20
 --- !u!1 &290344491
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,13 +537,14 @@ GameObject:
   - component: {fileID: 1112173908}
   - component: {fileID: 1112173910}
   - component: {fileID: 1112173911}
+  - component: {fileID: 1112173912}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1112173908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,6 +586,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 8
     m_NumAlphaKeys: 2
+  pointLight: {fileID: 0}
 --- !u!4 &1112173909
 Transform:
   m_ObjectHideFlags: 0
@@ -644,6 +646,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &1112173912
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112173907}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 0}
 --- !u!1 &1682911430
 GameObject:
   m_ObjectHideFlags: 0
