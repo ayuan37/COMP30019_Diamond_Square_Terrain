@@ -33,7 +33,7 @@ public class GenerateTerrain : MonoBehaviour
         GenerateVertices();
         DrawMesh();
         
-        MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
+        renderer = this.gameObject.GetComponent<MeshRenderer>();
         renderer.material.shader = Shader.Find("Unlit/TerrainShader");
     }
 
@@ -178,7 +178,7 @@ public class GenerateTerrain : MonoBehaviour
     void Update()
     {
         // Pass updated light positions to shader
-        renderer.material.SetColor("_PointLightColor", this.pointLight.color);
-        renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
+        // renderer.material.SetColor("_PointLightColor", this.pointLight.color);
+        // renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
     }
 }
