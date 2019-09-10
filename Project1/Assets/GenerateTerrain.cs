@@ -15,8 +15,11 @@ public class GenerateTerrain : MonoBehaviour
     private float maxTerrainHeight;
     int[] triangles;
     Mesh mesh;
+    MeshRenderer renderer;
 
     public Gradient heightGradient;
+
+    public SunScript pointLight;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +34,7 @@ public class GenerateTerrain : MonoBehaviour
         DrawMesh();
         
         MeshRenderer renderer = this.gameObject.GetComponent<MeshRenderer>();
-        renderer.material.shader = Shader.Find("Unlit/VertexColorShader");
+        renderer.material.shader = Shader.Find("Unlit/TerrainShader");
     }
 
     void GenerateVertices()
@@ -174,5 +177,8 @@ public class GenerateTerrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Pass updated light positions to shader
+        renderer.material.SetColor("_PointLightColor", this.pointLight.color);
+        renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
     }
 }
