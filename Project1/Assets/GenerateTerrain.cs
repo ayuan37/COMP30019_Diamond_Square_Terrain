@@ -61,17 +61,17 @@ public class GenerateTerrain : MonoBehaviour
         BuildTriangles();
 
         // init corners' heights
-        vertices[0].y = Random.Range(-maxHeight, maxHeight);
-        vertices[nDivisions].y = Random.Range(-maxHeight, maxHeight);
-        vertices[vertices.Length - 1 - nDivisions].y = Random.Range(-maxHeight, maxHeight);
-        vertices[vertices.Length - 1].y = Random.Range(-maxHeight, maxHeight);
+        vertices[0].y = Random.Range(maxHeight/2, maxHeight); // top right
+        vertices[nDivisions].y = Random.Range(maxHeight/2, maxHeight); // top left
+        vertices[nDivisions * (nDivisions + 1)].y = Random.Range(-maxHeight, -maxHeight/2); // bot left
+        vertices[nDivisions * (nDivisions + 1) + nDivisions].y = Random.Range(-maxHeight, -maxHeight/2); // bot left
 
 
         // go over each vertices and set its height according to diamond square
-        int niters = (int)Mathf.Log(nDivisions, 2);
+        // Ref: Ather Omar - https:// https://www.youtube.com/watch?v=1HV8GbFnCik
         int nSquares = 1;
         int squareSize = nDivisions;
-        for (int i = 0; i < niters; i++) {
+        for (int i = 0; i < (int)Mathf.Log(nDivisions, 2); i++) {
             int row = 0;
 
             for (int j = 0; j < nSquares; j++) {
@@ -85,7 +85,7 @@ public class GenerateTerrain : MonoBehaviour
             }
             nSquares *= 2;
             squareSize /= 2;
-            maxHeight *= 0.5f;
+            maxHeight *= 0.6f;
         }
 
         FindMinMaxHeight();
@@ -115,12 +115,11 @@ public class GenerateTerrain : MonoBehaviour
             // scale height to be a number between 0 and 1
             float scaledHeight = (vertices[v].y - minTerrainHeight)/(maxTerrainHeight - minTerrainHeight);
             colors[v] = heightGradient.Evaluate(scaledHeight);
-            // colors[v] = Color.red;
         }
 
     }
 
-    // TODO: optimise this to build triangles in the nested forloop above
+    // taken from Brackeys :https://www.youtube.com/watch?v=64NblGkAabk
     void BuildTriangles ()
     {
         int vert = 0;
@@ -146,22 +145,36 @@ public class GenerateTerrain : MonoBehaviour
         }
     }
 
+    // * - - x - - *  
+    // | - - - - - |
+    // | - - - - - |
+    // x - - m - - x Diamond, set m to be ave of * points + R 
+    // | - - - - - | Square, set x to be ave of nearest 2 * points + m point + R
+    // | - - - - - |
+    // * - - x - - *
     void DiamondSquare(int row, int col, int squareSize)
     {
-        int halfSize = (int)(squareSize * 0.5f);
-        int topLeft = row * (nDivisions + 1) + col;
-        int botLeft = (row + squareSize) * (nDivisions + 1) + col;
-        int mid = (int)(row + halfSize) * (nDivisions + 1) + (int)(col + halfSize);
+        int half = (int)(squareSize * 0.5f);
+        int top = row * (nDivisions + 1);
+        int bot = (row + squareSize) * (nDivisions + 1);
+        int right = col + squareSize;
+        int left = col;
+
+        int topLeft = top + left;
+        int topRight = top + right;
+        int botLeft = bot + left;
+        int botRight = bot + right;
+        // int botLeft = (row + squareSize) * (nDivisions + 1) + col;
+
+        int mid = (int)(row + half) * (nDivisions + 1) + (int)(col + half);
 
         // Diamond
-        vertices[mid].y = (vertices[topLeft].y + vertices[topLeft + squareSize].y
-                          + vertices[botLeft].y + vertices[botLeft + squareSize].y) * 0.25f +
-                                                                                 Random.Range(-maxHeight, maxHeight);
+        vertices[mid].y = (vertices[topLeft].y + vertices[topRight].y + vertices[botLeft].y + vertices[botRight].y) * 0.25f + Random.Range(-maxHeight, maxHeight);
         // Square
-        vertices[topLeft + halfSize].y = (vertices[topLeft].y + vertices[topLeft + squareSize].y + vertices[mid].y)/3 + Random.Range(-maxHeight, maxHeight);
-        vertices[mid - halfSize].y = (vertices[topLeft].y + vertices[botLeft].y + vertices[mid].y)/3 + Random.Range(-maxHeight, maxHeight);
-        vertices[mid + halfSize].y = (vertices[topLeft + squareSize].y + vertices[botLeft + squareSize].y + vertices[mid].y) / 3 + Random.Range(-maxHeight, maxHeight);
-        vertices[botLeft + halfSize].y = (vertices[botLeft].y + vertices[botLeft + squareSize].y + vertices[mid].y) / 3 + Random.Range(-maxHeight, maxHeight);
+        vertices[topLeft + half].y = (vertices[topLeft].y + vertices[topRight].y + vertices[mid].y)/3 + Random.Range(-maxHeight, maxHeight);
+        vertices[mid - half].y = (vertices[topLeft].y + vertices[botLeft].y + vertices[mid].y)/3 + Random.Range(-maxHeight, maxHeight);
+        vertices[mid + half].y = (vertices[topRight].y + vertices[botRight].y + vertices[mid].y) / 3 + Random.Range(-maxHeight, maxHeight);
+        vertices[botLeft + half].y = (vertices[botLeft].y + vertices[botRight].y + vertices[mid].y) / 3 + Random.Range(-maxHeight, maxHeight);
     }
 
     // taken from Brackeys :https://www.youtube.com/watch?v=64NblGkAabk
@@ -181,7 +194,7 @@ public class GenerateTerrain : MonoBehaviour
     void Update()
     {
         // Pass updated light positions to shader
-        // renderer.material.SetColor("_PointLightColor", this.pointLight.color);
-        // renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
+        renderer.material.SetColor("_PointLightColor", this.pointLight.color);
+        renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
     }
 }

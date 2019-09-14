@@ -131,7 +131,7 @@ Shader "Unlit/WaterPhong" {
                 /** Specular Light Calculation **/
 				// Calculate specular reflections
 				float Ks = 1;
-				float specN = 10; // Values>>1 give tighter highlights
+				float specN = 1000; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				float3 R = float3(0.0, 0.0, 0.0);
 
