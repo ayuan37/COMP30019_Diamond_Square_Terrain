@@ -1,5 +1,9 @@
 ﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Adapted from Lab 4 Code for WaveShader and Lab 5 PhongShader
 
 // Combining the wave and Bling-Phong lighting into one shader to create realistic waves and good lighting.
@@ -10,7 +14,7 @@ Shader "Unlit/WaterPhong" {
         // Water properties
         // _Color("Color", Color) = (1,1,1,1)
         _MainTex ("Texture", 2D) = "white" {}
-        _Transparency("Transparency", Range(0.0,0.5)) = 0.02
+        _Transparency("Transparency", Range(0.0,1.0)) = 0.5
 
         // Configure the physics of the wave
         _Amplitude("Amplitude", Range(-10,10)) = 0.2
@@ -20,7 +24,7 @@ Shader "Unlit/WaterPhong" {
     }
     SubShader { 
 
-        Tags {"RenderType" = "Transparent"}
+        Tags {"Queue"="Transparent" "RenderType" = "Transparent"}
 
         Blend SrcAlpha OneMinusSrcAlpha
         
@@ -40,7 +44,7 @@ Shader "Unlit/WaterPhong" {
             
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            // fixed4 _Color;
+            fixed4 _Color;
             float _Transparency;
             float _Amplitude, _Wavelength, _Speed;
 
@@ -91,7 +95,7 @@ Shader "Unlit/WaterPhong" {
 				float4 worldVertex = mul(unity_ObjectToWorld, v.vertex);
                 // multiply to transpose it
 				float3 worldNormal = normalize(mul(transpose((float3x3)unity_WorldToObject), v.normal.xyz));
-
+                
                 o.color = v.color;
 
                 o.worldVertex = worldVertex; // vertex in relation to light
@@ -144,8 +148,8 @@ Shader "Unlit/WaterPhong" {
                 returnColor.a = v.color.a;
 
 				// return the shader texture with the Blinn-Phong Lighting
-                fixed4 col = tex2D(_MainTex, v.uv) * returnColor;
-                col.a = _Transparency;
+                fixed4 col = tex2D(_MainTex, v.uv) * returnColor *_Transparency;
+                // col.a = _Transparency;
                 return col;
             }
             ENDCG

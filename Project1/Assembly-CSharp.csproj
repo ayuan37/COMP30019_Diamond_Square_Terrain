@@ -61,9 +61,7 @@
      <Compile Include="Assets\SunScript.cs" />
      <Compile Include="Assets\WaterVertices.cs" />
      <None Include="Assets\TerrainShader.shader" />
-     <None Include="Assets\WaterShader.shader" />
      <None Include="Assets\WaterPhong.shader" />
-     <None Include="Assets\PhongShader.shader" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/Users/ken/Documents/GitHub/COMP30019_Assignment1/Project1/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
