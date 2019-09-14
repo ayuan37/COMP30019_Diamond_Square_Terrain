@@ -76,7 +76,7 @@ Material:
     - _Wavelength: 2.5
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.9269918, b: 0.7688679, a: 1}
+    - _Color: {r: 1, g: 0.9327453, b: 0.76862746, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PointLightColor: {r: 0.6886792, g: 0.52950335, b: 0.6, a: 1}
     - _PointLightPosition: {r: 100, g: 0, b: 0, a: 0}
