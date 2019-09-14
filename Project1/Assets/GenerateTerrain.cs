@@ -7,7 +7,7 @@ public class GenerateTerrain : MonoBehaviour
 {
     private float size = 30f;
     private int nDivisions = 128;
-    private float maxHeight = 5f;
+    private float maxHeight = 6f;
 
     Vector3[] vertices;
     Color[] colors;
@@ -61,10 +61,10 @@ public class GenerateTerrain : MonoBehaviour
         BuildTriangles();
 
         // init corners' heights
-        vertices[0].y = Random.Range(maxHeight/2, maxHeight); // top right
-        vertices[nDivisions].y = Random.Range(maxHeight/2, maxHeight); // top left
-        vertices[nDivisions * (nDivisions + 1)].y = Random.Range(-maxHeight, -maxHeight/2); // bot left
-        vertices[nDivisions * (nDivisions + 1) + nDivisions].y = Random.Range(-maxHeight, -maxHeight/2); // bot left
+        vertices[0].y = Random.Range(maxHeight-1, maxHeight); // top right
+        vertices[nDivisions].y = Random.Range(maxHeight-1, maxHeight); // top left
+        vertices[nDivisions * (nDivisions + 1)].y = Random.Range(-maxHeight, -maxHeight+1); // bot left
+        vertices[nDivisions * (nDivisions + 1) + nDivisions].y = Random.Range(-maxHeight, -maxHeight+1); // bot left
 
 
         // go over each vertices and set its height according to diamond square
@@ -85,7 +85,7 @@ public class GenerateTerrain : MonoBehaviour
             }
             nSquares *= 2;
             squareSize /= 2;
-            maxHeight *= 0.6f;
+            maxHeight *= 0.5f;
         }
 
         FindMinMaxHeight();
@@ -101,9 +101,6 @@ public class GenerateTerrain : MonoBehaviour
             if (vertices[v].y > maxTerrainHeight) {
                 maxTerrainHeight = vertices[v].y;
             }
-            if (vertices[v].y < minTerrainHeight) {
-                minTerrainHeight = vertices[v].y;
-            }
         }
 
     }
@@ -113,8 +110,13 @@ public class GenerateTerrain : MonoBehaviour
         for (int v = 0; v < vertices.Length; v++) 
         {
             // scale height to be a number between 0 and 1
-            float scaledHeight = (vertices[v].y - minTerrainHeight)/(maxTerrainHeight - minTerrainHeight);
-            colors[v] = heightGradient.Evaluate(scaledHeight);
+            float scaledHeight = (vertices[v].y - 0)/(maxTerrainHeight - 0);
+            // if close to water line set color to be sand
+            if (vertices[v].y < 0.3) {
+                colors[v] = new Color(0.84f,0.77f,0.68f);
+            } else {
+                colors[v] = heightGradient.Evaluate(scaledHeight);
+            }
         }
 
     }
