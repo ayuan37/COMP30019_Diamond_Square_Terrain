@@ -8,13 +8,13 @@ Shader "Unlit/WaterPhong" {
     Properties {
 
         // Water properties
-        _Color("Color", Color) = (0,0,0,1)
+        // _Color("Color", Color) = (1,1,1,1)
         _MainTex ("Texture", 2D) = "white" {}
-        _Transparency("Transparency", Range(0.0,0.5)) = 0.25
+        _Transparency("Transparency", Range(0.0,0.5)) = 0.02
 
         // Configure the physics of the wave
-        _Amplitude("Amplitude", Range(-10,10)) = 3
-        _Wavelength("Wavelength", Range(-10,10)) = 3
+        _Amplitude("Amplitude", Range(-10,10)) = 0.2
+        _Wavelength("Wavelength", Range(-10,10)) = 0.25
         _Speed("Speed", Range(-10,10)) = 1
 
     }
@@ -40,7 +40,7 @@ Shader "Unlit/WaterPhong" {
             
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            fixed4 _Color;
+            // fixed4 _Color;
             float _Transparency;
             float _Amplitude, _Wavelength, _Speed;
 
@@ -75,6 +75,12 @@ Shader "Unlit/WaterPhong" {
             {
                 // Displace original vertex to model space
                 vertOut o;
+
+                /************** WATER ****************/
+                // Configure the displacement of the waves
+                float period = 2 * UNITY_PI/_Wavelength;
+                float4 displacement = float4(0.0f, _Amplitude * sin(period * (v.vertex.x - _Speed * _Time.y)), _Amplitude * cos(period * (v.vertex.z - _Speed * _Time.y)), 0.0f);
+                v.vertex += displacement;
                 
                 /******************************** Light ********************************/
                 
@@ -86,19 +92,11 @@ Shader "Unlit/WaterPhong" {
                 // multiply to transpose it
 				float3 worldNormal = normalize(mul(transpose((float3x3)unity_WorldToObject), v.normal.xyz));
 
-                o.vertex = UnityObjectToClipPos(v.vertex);
                 o.color = v.color;
 
                 o.worldVertex = worldVertex; // vertex in relation to light
                 o.worldNormal = worldNormal;
 
-                /************** WATER ****************/
-
-                // Configure the displacement of the waves
-                float period = 2 * UNITY_PI/_Wavelength;
-                float4 displacement = float4(0.0f, _Amplitude * sin(period * (v.vertex.x - _Speed * _Time.y)), _Amplitude * cos(period * (v.vertex.z - _Speed * _Time.y)), 0.0f);
-                v.vertex += displacement;  
-                
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -121,7 +119,7 @@ Shader "Unlit/WaterPhong" {
 				// Calculate diffuse RBG reflections, we save the results of L.N because we will use it again
 				// (when calculating the reflected ray in our specular component)
 				float fAtt = 1;
-				float Kd = 1;
+				float Kd = 3;
 				float3 L = normalize(_PointLightPosition - v.worldVertex.xyz);
 				// calculate the reflection
                 float LdotN = dot(L, interpNormal);
@@ -130,7 +128,7 @@ Shader "Unlit/WaterPhong" {
 				
                 /** Specular Light Calculation **/
 				// Calculate specular reflections
-				float Ks = 1;
+				float Ks = 1.5;
 				float specN = 1000; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				float3 R = float3(0.0, 0.0, 0.0);
