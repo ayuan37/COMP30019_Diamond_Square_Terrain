@@ -391,8 +391,6 @@ MonoBehaviour:
   localPos: {x: 0, y: 20, z: 0}
   sunSpeed: 0.5
   timeCount: 0
-  xSunDistance: 20
-  ySunDistance: 20
 --- !u!1 &290344491
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,21 +645,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   heightGradient:
     serializedVersion: 2
-    key0: {r: 0.29803923, g: 0.27450982, b: 0.19607843, a: 1}
-    key1: {r: 0.67558026, g: 0.745283, b: 0, a: 1}
-    key2: {r: 0.32212391, g: 0.33962262, b: 0.22588108, a: 0}
-    key3: {r: 0.36116666, g: 0.38679248, b: 0.19886972, a: 0}
-    key4: {r: 0.4214376, g: 0.4528302, b: 0.24563903, a: 0}
-    key5: {r: 0.15319549, g: 0.3490566, b: 0.067506224, a: 0}
-    key6: {r: 0.4811321, g: 0.3912606, b: 0.3063813, a: 0}
+    key0: {r: 0.12746437, g: 0.2924528, b: 0.028969381, a: 1}
+    key1: {r: 0.24803862, g: 0.3584906, b: 0, a: 1}
+    key2: {r: 0.15319549, g: 0.3490566, b: 0.067506224, a: 0}
+    key3: {r: 0.4811321, g: 0.3912606, b: 0.3063813, a: 0}
+    key4: {r: 0.8867924, g: 0.8826094, b: 0.8826094, a: 0}
+    key5: {r: 0.8867924, g: 0.8826094, b: 0.8826094, a: 0}
+    key6: {r: 0.8867924, g: 0.8826094, b: 0.8826094, a: 0}
     key7: {r: 0.8867924, g: 0.8826094, b: 0.8826094, a: 0}
-    ctime0: 0
+    ctime0: 193
     ctime1: 9445
-    ctime2: 18311
-    ctime3: 27178
-    ctime4: 34502
-    ctime5: 44525
-    ctime6: 55705
+    ctime2: 23708
+    ctime3: 32768
+    ctime4: 65535
+    ctime5: 65535
+    ctime6: 65535
     ctime7: 65535
     atime0: 0
     atime1: 65535
@@ -672,7 +670,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 8
+    m_NumColorKeys: 5
     m_NumAlphaKeys: 2
   pointLight: {fileID: 258281068}
 --- !u!4 &1112173909
