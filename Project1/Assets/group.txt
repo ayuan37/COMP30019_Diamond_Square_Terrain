@@ -1,0 +1,9 @@
+Raisa Amalia, 926910:
+- Made camera movement and tilting it with pitch and yaw
+- Made the sun move and rotate around the landscape
+- Made the boundaries around the landscape so the camera does not fly out of boundaries
+- Implement water movement using CG/HLSL shader
+- Implement Phong shader for the water
+
+Angel Yuan, ... :
+-
