@@ -10,8 +10,7 @@ public class SunMovement : MonoBehaviour
 
     private float xSunDistance = 30.0f;
     private float ySunDistance = 30.0f;
-
-    // Update is called once per frame
+    
     void Update()
     {
         float x, y;
