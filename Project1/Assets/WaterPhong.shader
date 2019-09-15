@@ -6,7 +6,7 @@
 
 // Adapted from Lab 4 Code for WaveShader and Lab 5 PhongShader
 
-// Combining the wave and Bling-Phong lighting into one shader to create realistic waves and good lighting.
+// Combining the wave and Blinn-Phong shading into one shader to create realistic waves and good lighting.
 Shader "Unlit/WaterPhong" {
     
     Properties {
