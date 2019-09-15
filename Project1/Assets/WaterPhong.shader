@@ -123,7 +123,7 @@ Shader "Unlit/WaterPhong" {
 				// Calculate diffuse RBG reflections, we save the results of L.N because we will use it again
 				// (when calculating the reflected ray in our specular component)
 				float fAtt = 1;
-				float Kd = 3;
+				float Kd = 2;
 				float3 L = normalize(_PointLightPosition - v.worldVertex.xyz);
 				// calculate the reflection
                 float LdotN = dot(L, interpNormal);
@@ -132,7 +132,7 @@ Shader "Unlit/WaterPhong" {
 				
                 /** Specular Light Calculation **/
 				// Calculate specular reflections
-				float Ks = 1.5;
+				float Ks = 2;
 				float specN = 1000; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				float3 R = float3(0.0, 0.0, 0.0);

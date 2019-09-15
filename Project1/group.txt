@@ -5,5 +5,8 @@ Raisa Amalia, 926910:
 - Implement water movement using CG/HLSL shader
 - Implement Phong shader for the water
 
-Angel Yuan, ... :
--
+Angel Yuan, 731109 :
+- Implement the Diamond-Square algorithm to generate tthe landscape
+- Implement vertices generation and uv mapping for the water plane
+- Coloured the terrain in a sensible way
+- Implement Phong shader for the terrain 

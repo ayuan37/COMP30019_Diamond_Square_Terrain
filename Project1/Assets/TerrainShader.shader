@@ -77,7 +77,7 @@ Shader "Unlit/TerrainShader"
                 /** Specular Light Calculation **/
 				// Calculate specular reflections
 				float Ks = 0.2;
-				float specN = 1; // Values>>1 give tighter highlights
+				float specN = 0.5; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 
                 // Using the Bling-Phong Formula to replace the R.L with N.H
