@@ -1,18 +1,10 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Adapted from Lab 4 Code for WaveShader and Lab 5 PhongShader
-
+﻿// Adapted from Lab 4 Code for wave movements and Lab 5 for Blinn Phong shader lighting
 // Combining the wave and Blinn-Phong shading into one shader to create realistic waves and good lighting.
 Shader "Unlit/WaterPhong" {
     
     Properties {
 
         // Water properties
-        // _Color("Color", Color) = (1,1,1,1)
         _MainTex ("Texture", 2D) = "white" {}
         _Transparency("Transparency", Range(0.0,1.0)) = 0.5
 
@@ -23,9 +15,8 @@ Shader "Unlit/WaterPhong" {
 
     }
     SubShader { 
-
+        // Create transparent water
         Tags {"Queue"="Transparent" "RenderType" = "Transparent"}
-
         Blend SrcAlpha OneMinusSrcAlpha
         
         Pass {
@@ -36,7 +27,6 @@ Shader "Unlit/WaterPhong" {
             #pragma fragment frag
             #include "UnityCG.cginc"
             #define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw)
-
 
             // The lighting for the water
             uniform float3 _PointLightColor = (0, 0, 0);
@@ -57,10 +47,8 @@ Shader "Unlit/WaterPhong" {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
 
-                // phong
 				float4 normal : NORMAL;
 				float4 color : COLOR;
-                
             };
 
             struct vertOut
@@ -68,7 +56,6 @@ Shader "Unlit/WaterPhong" {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
 
-                // phong
 				float4 color : COLOR;
 				float4 worldVertex : TEXCOORD1;
 				float3 worldNormal : TEXCOORD2;
@@ -80,25 +67,21 @@ Shader "Unlit/WaterPhong" {
                 // Displace original vertex to model space
                 vertOut o;
 
-                /************** WATER ****************/
-                // Configure the displacement of the waves
+                /******************************** Water ********************************/
+
+                // Configure the displacement of the waves and model realistic movements for the waves
                 float period = 2 * UNITY_PI/_Wavelength;
-                float4 displacement = float4(0.0f, _Amplitude * sin(period * (v.vertex.x - _Speed * _Time.y)), _Amplitude * cos(period * (v.vertex.z - _Speed * _Time.y)), 0.0f);
+                float4 displacement = float4(0, _Amplitude * sin(period * (v.vertex.x - _Speed * _Time.y)), _Amplitude * cos(period * (v.vertex.z - _Speed * _Time.y)), 0);
                 v.vertex += displacement;
                 
                 /******************************** Light ********************************/
-                
-                // Convert Vertex position and corresponding normal into world coords.
-				// Note that we have to multiply the normal by the transposed inverse of the world 
-				// transformation matrix (for cases where we have non-uniform scaling; we also don't
-				// care about the "fourth" dimension, because translations don't affect the normal) 
+
 				float4 worldVertex = mul(unity_ObjectToWorld, v.vertex);
-                // multiply to transpose it
 				float3 worldNormal = normalize(mul(transpose((float3x3)unity_WorldToObject), v.normal.xyz));
                 
                 o.color = v.color;
 
-                o.worldVertex = worldVertex; // vertex in relation to light
+                o.worldVertex = worldVertex;
                 o.worldNormal = worldNormal;
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -107,8 +90,8 @@ Shader "Unlit/WaterPhong" {
                   
                 return o;
             }
-            
-            // Implementation of the fragment shader
+                        
+            // Code from: Original Cg/HLSL code stub copyright (c) 2010-2012 SharpDX - Alexandre Mutel
             fixed4 frag(vertOut v) : SV_Target {
 
                 // Estimate normal based on each pixel, may not be of lenght 1
@@ -131,13 +114,14 @@ Shader "Unlit/WaterPhong" {
                 float3 dif = fAtt * _PointLightColor.rgb * Kd * v.color.rgb * saturate(LdotN);
 				
                 /** Specular Light Calculation **/
+
 				// Calculate specular reflections
 				float Ks = 2;
 				float specN = 1000; // Values>>1 give tighter highlights
 				float3 V = normalize(_WorldSpaceCameraPos - v.worldVertex.xyz);
 				float3 R = float3(0.0, 0.0, 0.0);
 
-                // Using the Bling-Phong Formula to replace the R.L with N.H
+                // Using the Blinn-Phong Formula to replace the R.L with N.H
                 float3 H = normalize(V + L);
 				float3 spe = fAtt * _PointLightColor.rgb * Ks * pow(saturate(dot(interpNormal, H)), specN);
             
@@ -148,8 +132,7 @@ Shader "Unlit/WaterPhong" {
                 returnColor.a = v.color.a;
 
 				// return the shader texture with the Blinn-Phong Lighting
-                fixed4 col = tex2D(_MainTex, v.uv) * returnColor *_Transparency;
-                // col.a = _Transparency;
+                fixed4 col = tex2D(_MainTex, v.uv) * returnColor * _Transparency;
                 return col;
             }
             ENDCG

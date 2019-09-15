@@ -12,7 +12,6 @@ public class WaterVertices : MonoBehaviour
 
     Mesh mesh;
 
-    // public Shader waterShader;
     public SunScript pointLight;
 
     // Use this for initialization
@@ -36,15 +35,11 @@ public class WaterVertices : MonoBehaviour
                     new Vector3(-halfSize + x*divisionSize, y, halfSize - z*divisionSize);
             }    
         }
-        
         MapUvs();
         BuildTriangles();
         DrawMesh();
 
         MeshCollider collider = this.gameObject.GetComponent<MeshCollider>();
-        collider.sharedMesh = mesh;
-
-        
 
     }
 
@@ -60,6 +55,7 @@ public class WaterVertices : MonoBehaviour
 
     }
 
+    // Build triangles from the vertices to create realistic water
     void BuildTriangles ()
     {
         int vert = 0;
@@ -85,6 +81,7 @@ public class WaterVertices : MonoBehaviour
         }
     }
 
+    // Map texture to the vertices
     void MapUvs(){
         uvs = new Vector2[vertices.Length];
         for (int i = 0; i < uvs.Length; i++)
@@ -93,6 +90,7 @@ public class WaterVertices : MonoBehaviour
         }
     }
 
+    // Draw the mesh of the water
     void DrawMesh()
     {
         mesh.Clear();

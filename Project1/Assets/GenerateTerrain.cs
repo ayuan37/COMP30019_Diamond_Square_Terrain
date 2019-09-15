@@ -18,7 +18,6 @@ public class GenerateTerrain : MonoBehaviour
     MeshRenderer renderer;
 
     public Gradient heightGradient;
-
     public SunScript pointLight;
 
     // Start is called before the first frame update

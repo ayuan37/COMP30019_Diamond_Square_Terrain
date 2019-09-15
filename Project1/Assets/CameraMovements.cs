@@ -9,7 +9,6 @@ public class CameraMovements : MonoBehaviour
   public Rigidbody myRigidBody;
   public float cameraSpeed = 0.1f;
   public float rotationSpeed = 1.0f;
-
   public float pitchRotation = 0.0f;
   public float yawRotation = 0.0f;
 
