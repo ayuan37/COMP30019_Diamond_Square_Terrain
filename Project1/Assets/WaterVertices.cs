@@ -40,6 +40,7 @@ public class WaterVertices : MonoBehaviour
         DrawMesh();
 
         MeshCollider collider = this.gameObject.GetComponent<MeshCollider>();
+        collider.sharedMesh = mesh;
 
     }
 
