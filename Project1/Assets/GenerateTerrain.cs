@@ -15,7 +15,7 @@ public class GenerateTerrain : MonoBehaviour
     private float maxTerrainHeight;
     int[] triangles;
     Mesh mesh;
-    MeshRenderer renderer;
+    MeshRenderer terrainRenderer;
 
     public Gradient heightGradient;
     public SunScript pointLight;
@@ -32,8 +32,8 @@ public class GenerateTerrain : MonoBehaviour
         GenerateVertices();
         DrawMesh();
         
-        renderer = this.gameObject.GetComponent<MeshRenderer>();
-        renderer.material.shader = Shader.Find("Unlit/TerrainShader");
+        terrainRenderer = this.gameObject.GetComponent<MeshRenderer>();
+        terrainRenderer.material.shader = Shader.Find("Unlit/TerrainShader");
 
         MeshCollider collider = this.gameObject.GetComponent<MeshCollider>();
         collider.sharedMesh = mesh;
@@ -195,7 +195,7 @@ public class GenerateTerrain : MonoBehaviour
     void Update()
     {
         // Pass updated light positions to shader
-        renderer.material.SetColor("_PointLightColor", this.pointLight.color);
-        renderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
+        terrainRenderer.material.SetColor("_PointLightColor", this.pointLight.color);
+        terrainRenderer.material.SetVector("_PointLightPosition", this.pointLight.GetWorldPosition());
     }
 }
