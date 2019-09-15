@@ -113,7 +113,7 @@ public class GenerateTerrain : MonoBehaviour
             float scaledHeight = (vertices[v].y - 0)/(maxTerrainHeight - 0);
             // if close to water line set color to be sand
             if (vertices[v].y < 0.3) {
-                colors[v] = new Color(0.84f,0.77f,0.68f);
+                colors[v] = new Color(0.96f,0.80f,0.41f);
             } else {
                 colors[v] = heightGradient.Evaluate(scaledHeight);
             }
